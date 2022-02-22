@@ -3,12 +3,14 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let particlesArray = [];
+let adjustX = 1;
+let adjustY = 5;
 
 // mouse handling
 let mouse = {
     x: null,
     y: null,
-    radius: 250
+    radius: 150
 }
 
 window.addEventListener('mousemove', function (e){
@@ -18,8 +20,8 @@ window.addEventListener('mousemove', function (e){
 
 ctx.fillStyle = 'white';
 ctx.font = '30px Verdana';
-ctx.fillText('A', 0, 30);
-const data = ctx.getImageData(0, 0, 100, 100);
+ctx.fillText('REEL', 0, 30);
+const textCoordinates = ctx.getImageData(0, 0, 100, 100);
 
 class Particle {
     constructor(x,y){
@@ -65,11 +67,20 @@ class Particle {
 
 function init() {
     particlesArray = [];
-    for (let i = 0; i < 500; i++ ) {
-        let x = Math.random() * canvas.width;
-        let y = Math.random() * canvas.height
-        particlesArray.push(new Particle(x,y));
+    for (let y = 0, y2 = textCoordinates.height; y < y2; y++){
+        for (let x = 0, x2 = textCoordinates.width; x < x2; x++){
+            if (textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128){
+                let positionX = x + adjustX;
+                let positionY = y + adjustY;
+                particlesArray.push(new Particle(positionX * 20, positionY * 20));
+            }
+        }
     }
+    // for (let i = 0; i < 500; i++ ) {
+    //     let x = Math.random() * canvas.width;
+    //     let y = Math.random() * canvas.height
+    //     particlesArray.push(new Particle(x,y));
+    // }
 
 }
 init();
